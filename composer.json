@@ -1,0 +1,57 @@
+{
+  "name": "otodev/laravel-repo-generator",
+  "type": "project",
+  "description": "Repository Generator for Laravel Framework.",
+  "keywords": [
+    "repository",
+    "generator",
+    "framework",
+    "laravel"
+  ],
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Dimitris Ntais",
+      "email": "d.dais@otodev.gr"
+    }
+  ],
+  "require": {
+    "php": "^7.2.5",
+    "illuminate/contracts": "^7.0|^8.0",
+    "illuminate/support": "^7.0|^8.0"
+  },
+  "require-dev": {
+    "laravel/framework": "^7.0|^8.0",
+    "phpunit/phpunit": "^8.5"
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Otodev\\Providers\\CoreServiceProvider",
+        "Otodev\\Providers\\RepositoryServiceProvider",
+        "Otodev\\Providers\\ValidationServiceProvider"
+      ],
+      "aliases": {
+        "Core": "Otodev\\Facades\\Core"
+      }
+    },
+    "branch-alias": {
+      "dev-master": "1.0-dev"
+    }
+  },
+  "autoload": {
+    "psr-4": {
+      "Otodev\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Otodev\\Tests\\": "tests/"
+    }
+  },
+  "config": {
+    "sort-packages": true
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true
+}
