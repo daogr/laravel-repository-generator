@@ -1,0 +1,89 @@
+<?php
+
+    namespace DummyNamespace;
+
+    use App\Contracts\Repositories\UseDummyClassRepositoryContract;
+    use App\Http\Resources\UseDummyClassListResource;
+    use App\Models\UseDummyClass;
+    use Illuminate\Container\Container as Application;
+    use Illuminate\Contracts\Container\BindingResolutionException;
+    use Otodev\Criteria\RequestCriteria;
+    use Otodev\Eloquent\BaseRepository;
+    use Otodev\Exceptions\RepositoryException;
+    use Otodev\Utils\RepositoryUtil;
+
+    /**
+     * Class DummyClassRepository
+     * @package DummyNamespace
+     */
+    class DummyClassRepository extends BaseRepository implements DummyClassRepositoryContract {
+
+        /**
+         * @var array
+         */
+        protected $fieldSearchable = [];
+
+        /**
+         * Specify Validator Rules.
+         *
+         * @var array
+         */
+        protected $rules = DummyClass::RULES;
+
+        /**
+         * RolesRepository constructor.
+         *
+         * @param Application $app
+         *
+         * @throws BindingResolutionException
+         * @throws RepositoryException
+         */
+        public function __construct(Application $app) {
+            parent::__construct($app);
+        }
+
+        /**
+         * Specify Model class name.
+         *
+         * @return string
+         */
+        public function model() {
+            return DummyClass::class;
+        }
+
+        /**
+         * Boot up the repository, pushing criteria.
+         *
+         * @throws RepositoryException
+         */
+        public function boot() {
+            $this->pushCriteria(app(RequestCriteria::class));
+        }
+
+        /**
+         * Retrieve all data of repository, paginated.
+         *
+         * @param null     $limit
+         * @param string[] $columns
+         * @param string   $method
+         *
+         * @return mixed
+         * @throws \Illuminate\Contracts\Container\BindingResolutionException
+         * @throws \Otodev\Exceptions\RepositoryException
+         */
+        public function paginate($limit = null, $columns = ['*'], $method = "paginate") {
+            $result = parent::paginate($limit, $columns, $method);
+
+            if(!$this->isSkippedResource()) {
+                $fillable = $this->model->getFillable();
+
+                $result->map(function($i) use ($fillable) {
+                    $i->fillable = $fillable;
+                });
+
+                $result = DummyClassListResource::collection($result);
+            }
+
+            return RepositoryUtil::paginate($result, $result->count(), $result->total());
+        }
+    }
