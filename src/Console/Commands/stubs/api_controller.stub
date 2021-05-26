@@ -1,0 +1,116 @@
+<?php
+
+    namespace DummyNamespace;
+
+    use App\Contracts\Repositories\UseDummyClassRepositoryContract;
+    use App\Http\Controllers\Controller;
+    use App\Http\Requests\UseDummyClassCreateRequest;
+    use App\Http\Requests\UseDummyClassUpdateRequest;
+    use App\Models\UseDummyClass;
+    use Illuminate\Contracts\Container\BindingResolutionException;
+    use Illuminate\Http\JsonResponse;
+    use Otodev\Exceptions\RepositoryException;
+    use Otodev\Traits\HasApiResponse;
+
+    /**
+     * Class DummyClassController
+     * @package DummyNamespace
+     */
+    class DummyClassController extends Controller {
+        use HasApiResponse;
+
+        /**
+         * @var DummyClassRepositoryContract
+         */
+        protected $repository;
+
+        /**
+         * DummyClassController constructor.
+         *
+         * @param DummyClassRepositoryContract $repository
+         */
+        public function __construct(DummyClassRepositoryContract $repository) {
+            $this->repository = $repository;
+
+            /**
+             * Authorize a resource action based on the incoming request.
+             */
+            $this->authorizeResource(DummyClass::class, DummyClass::class);
+        }
+
+        /**
+         * Display a listing of the resource.
+         *
+         * @return JsonResponse
+         */
+        public function index() {
+            return $this->response($this->repository->paginate(), trans_choice('DummyTrans.retrieved_successfully', 2));
+        }
+
+        /**
+         * Display the specified resource.
+         *
+         * @param int $id
+         *
+         * @return JsonResponse
+         * @throws RepositoryException
+         * @throws BindingResolutionException
+         */
+        public function show($id) {
+            $resource = $this->repository->find($id);
+
+            if(!$resource) {
+                return $this->error(__('DummyTrans.not_found'));
+            }
+
+            return $this->response($resource, trans_choice('DummyTrans.retrieved_successfully', 1));
+        }
+
+        /**
+         * Store a newly created resource in storage.
+         *
+         * @param DummyClassCreateRequest $request
+         *
+         * @return JsonResponse
+         */
+        public function store(DummyClassCreateRequest $request) {
+            $resource = $this->repository->create($request->validated(), true);
+
+            return $this->response($resource, __('DummyTrans.saved_successfully'));
+        }
+
+        /**
+         * Update the specified resource in storage.
+         *
+         * @param DummyClassUpdateRequest $request
+         * @param int                     $id
+         *
+         * @return JsonResponse
+         */
+        public function update(DummyClassUpdateRequest $request, $id) {
+            $resource = $this->repository->update($request->validated(), $id, true);
+
+            if(!$resource) {
+                return $this->error(__('DummyTrans.not_found'));
+            }
+
+            return $this->response($resource, __('DummyTrans.updated_successfully'));
+        }
+
+        /**
+         * Remove the specified resource from storage.
+         *
+         * @param int $id
+         *
+         * @return JsonResponse
+         */
+        public function destroy($id) {
+            $resource = $this->repository->delete($id);
+
+            if(!$resource) {
+                return $this->error(__('DummyTrans.not_found'));
+            }
+
+            return $this->success(__('DummyTrans.deleted_successfully'));
+        }
+    }
