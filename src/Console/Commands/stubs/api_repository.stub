@@ -1,0 +1,174 @@
+<?php
+
+    namespace DummyNamespace;
+
+    use App\Contracts\Repositories\UseDummyClassRepositoryContract;
+    use App\Http\Resources\UseDummyClassListResource;
+    use App\Http\Resources\UseDummyClassShowResource;
+    use App\Http\Resources\UseDummyClassStoreResource;
+    use App\Http\Resources\UseDummyClassUpdateResource;
+    use App\Models\UseDummyClass;
+    use Illuminate\Container\Container as Application;
+    use Illuminate\Contracts\Container\BindingResolutionException;
+    use Otodev\Criteria\RequestCriteria;
+    use Otodev\Eloquent\BaseRepository;
+    use Otodev\Exceptions\RepositoryException;
+    use Otodev\Utils\RepositoryUtil;
+
+    /**
+     * Class DummyClassRepository
+     * @package DummyNamespace
+     */
+    class DummyClassRepository extends BaseRepository implements DummyClassRepositoryContract {
+
+        /**
+         * @var array
+         */
+        protected $fieldSearchable = [];
+
+        /**
+         * Specify Validator Rules.
+         *
+         * @var array
+         */
+        protected $rules = DummyClass::RULES;
+
+        /**
+         * RolesRepository constructor.
+         *
+         * @param Application $app
+         *
+         * @throws BindingResolutionException
+         * @throws RepositoryException
+         */
+        public function __construct(Application $app) {
+            parent::__construct($app);
+        }
+
+        /**
+         * Specify Model class name.
+         *
+         * @return string
+         */
+        public function model() {
+            return DummyClass::class;
+        }
+
+        /**
+         * Boot up the repository, pushing criteria.
+         *
+         * @throws RepositoryException
+         */
+        public function boot() {
+            $this->pushCriteria(app(RequestCriteria::class));
+        }
+
+        /**
+         * Save a new entity in repository.
+         *
+         * @param array $attributes
+         * @param false $transform
+         *
+         * @return \App\Http\Resources\UseDummyClassShowResource|\Eloquent|mixed
+         * @throws \Illuminate\Contracts\Container\BindingResolutionException
+         * @throws \Otodev\Exceptions\RepositoryException
+         * @throws \Otodev\Exceptions\ValidatorException
+         */
+        public function create(array $attributes, $transform = false) {
+            if($transform) {
+                $attributes = (new DummyClassStoreResource($attributes))->additional(['fillable' => $this->model->getFillable()])->toArray(request());
+            }
+
+            $result = parent::create($attributes, $transform);
+
+            if(!$this->isSkippedResource()) {
+                return new DummyClassShowResource($result);
+            }
+
+            return $result;
+        }
+
+        /**
+         * Update a entity in repository by id.
+         *
+         * @param array $attributes
+         * @param int   $id
+         * @param false $transform
+         *
+         * @return \App\Http\Resources\UseDummyClassShowResource|bool|\Eloquent|\Eloquent[]|\Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Model|mixed|null
+         * @throws \Illuminate\Contracts\Container\BindingResolutionException
+         * @throws \Otodev\Exceptions\RepositoryException
+         * @throws \Otodev\Exceptions\ValidatorException
+         */
+        public function update(array $attributes, $id, $transform = false) {
+            $exists = $this->exists($id);
+            if(!$exists) {
+                return $exists;
+            }
+
+            if($transform) {
+                $attributes = (new DummyClassUpdateResource($attributes))->additional(['fillable' => $this->model->getFillable()])->toArray(request());
+            }
+
+            $result = parent::update($attributes, $id, $transform);
+
+            if(!$this->isSkippedResource()) {
+                return new DummyClassShowResource($result);
+            }
+
+            return $result;
+        }
+
+        /**
+         * Update or Create an entity in repository.
+         *
+         * @param array $attributes
+         * @param array $values
+         * @param false $transform
+         *
+         * @return \App\Http\Resources\UseDummyClassShowResource|\Eloquent|\Illuminate\Database\Eloquent\Model|mixed
+         * @throws \Illuminate\Contracts\Container\BindingResolutionException
+         * @throws \Otodev\Exceptions\RepositoryException
+         * @throws \Otodev\Exceptions\ValidatorException
+         */
+        public function updateOrCreate(array $attributes, array $values = [], $transform = false) {
+            if($transform) {
+                $attributes = (new DummyClassUpdateResource($attributes))->additional(['fillable' => $this->model->getFillable()])->toArray(request());
+            }
+
+            $result = parent::updateOrCreate($attributes, $values, $transform);
+
+            if(!$this->isSkippedResource()) {
+                return new DummyClassShowResource($result);
+            }
+
+            return $result;
+        }
+
+        /**
+         * Retrieve all data of repository, paginated.
+         *
+         * @param null     $limit
+         * @param string[] $columns
+         * @param string   $method
+         *
+         * @return mixed
+         * @throws \Illuminate\Contracts\Container\BindingResolutionException
+         * @throws \Otodev\Exceptions\RepositoryException
+         */
+        public function paginate($limit = null, $columns = ['*'], $method = "paginate") {
+            $result = parent::paginate($limit, $columns, $method);
+
+            if(!$this->isSkippedResource()) {
+                $fillable = $this->model->getFillable();
+
+                $result->map(function($i) use ($fillable) {
+                    $i->fillable = $fillable;
+                });
+
+                $result = DummyClassListResource::collection($result);
+            }
+
+            return RepositoryUtil::paginate($result, $result->count(), $result->total());
+        }
+    }
