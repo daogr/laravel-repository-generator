@@ -1,0 +1,90 @@
+<?php
+
+    namespace DummyNamespace;
+
+    use Illuminate\Auth\Access\HandlesAuthorization;
+    use Otodev\Contracts\Models\UserPassportContract;
+
+    /**
+     * Class DummyClassRepository
+     * @package DummyNamespace
+     */
+    class DummyClassPolicy {
+        use HandlesAuthorization;
+
+        /**
+         * @param UserPassportContract $user
+         * @param                      $ability
+         *
+         * @return bool
+         */
+        public function before(UserPassportContract $user, $ability) {
+            if($user->role->admin) return true;
+        }
+
+        /**
+         * Determine whether the user can view any DummyClass.
+         *
+         * @param UserPassportContract $user
+         *
+         * @return mixed
+         */
+        public function viewAny(UserPassportContract $user) {
+            return $user->canScope('DummyClass.api') || $user->canScope('DummyClass.access');
+        }
+
+        /**
+         * Determine whether the user can view the DummyClass.
+         *
+         * @param UserPassportContract $user
+         *
+         * @return mixed
+         */
+        public function view(UserPassportContract $user) {
+            return $user->canScope('DummyClass.access') || $user->canScope('DummyClass.manage');
+        }
+
+        /**
+         * Determine whether the user can create DummyClass.
+         *
+         * @param UserPassportContract $user
+         *
+         * @return mixed
+         */
+        public function create(UserPassportContract $user) {
+            return $user->canScope('DummyClass.add');
+        }
+
+        /**
+         * Determine whether the user can update the DummyClass.
+         *
+         * @param UserPassportContract $user
+         *
+         * @return mixed
+         */
+        public function update(UserPassportContract $user) {
+            return $user->canScope('DummyClass.add');
+        }
+
+        /**
+         * Determine whether the user can delete the DummyClass.
+         *
+         * @param UserPassportContract $user
+         *
+         * @return mixed
+         */
+        public function delete(UserPassportContract $user) {
+            return $user->canScope('DummyClass.delete');
+        }
+
+        /**
+         * Determine whether the user can permanently delete the DummyClass.
+         *
+         * @param UserPassportContract $user
+         *
+         * @return mixed
+         */
+        public function forceDelete(UserPassportContract $user) {
+            return $user->canScope('DummyClass.delete');
+        }
+    }
