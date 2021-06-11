@@ -1,0 +1,26 @@
+<?php
+
+    namespace DummyNamespace;
+
+    use Illuminate\Http\Request;
+    use Illuminate\Http\Resources\Json\JsonResource;
+    use Otodev\Traits\DummyTraitClass;
+
+    /**
+     * Class DummyClassResource
+     * @package DummyNamespace
+     */
+    class DummyClassResource extends JsonResource {
+        use DummyTraitClass;
+
+        /**
+         * Transform the resource into an array.
+         *
+         * @param Request $request
+         *
+         * @return array
+         */
+        public function toArray($request) {
+            return $this->transformed();
+        }
+    }
