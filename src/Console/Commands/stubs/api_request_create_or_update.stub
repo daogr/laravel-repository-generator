@@ -1,0 +1,24 @@
+<?php
+
+    namespace DummyNamespace;
+
+    use UseDummyImportClass;
+    use Otodev\Traits\HasValidatorAction;
+    use Otodev\Requests\ApiRequest;
+
+    /**
+     * Class DummyClass
+     * @package DummyNamespace
+     */
+    class DummyClass extends ApiRequest {
+        use HasValidatorAction;
+
+        /**
+         * Get the validation rules that apply to the request.
+         *
+         * @return array
+         */
+        public function rules() {
+            return $this->fixRequestRuleKeys(DummyImportClass::RULES[$this->getAction()]);
+        }
+    }
