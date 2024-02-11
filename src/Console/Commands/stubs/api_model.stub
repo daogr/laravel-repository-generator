@@ -1,0 +1,68 @@
+<?php
+
+namespace DummyNamespace;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Otodev\Contracts\ValidatorContract;
+
+class DummyClass extends Model
+{
+    use HasFactory;
+
+    /**
+     * The name of the "created at" column.
+     *
+     * @var string|null
+     */
+    const CREATED_AT = 'created_at';
+
+    /**
+     * The name of the "updated at" column.
+     *
+     * @var string|null
+     */
+    const UPDATED_AT = 'updated_at';
+
+    /**
+     * Validation rules
+     *
+     * @var array
+     */
+    const RULES = [
+        ValidatorContract::RULE_CREATE => [
+            //'name'        => 'required',
+        ],
+        ValidatorContract::RULE_UPDATE => [
+            //'name'        => 'required',
+        ],
+    ];
+
+    /**
+     * Indicates if the model should be timestamped.
+     *
+     * @var bool
+     */
+    public $timestamps = false;
+
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    //public $table = '{{dummy_table}}';
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var string[]
+     */
+    protected $fillable = [];
+
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array
+     */
+    protected $casts = [];
+}
