@@ -1,0 +1,9 @@
+<?php
+
+return [
+    'retrieved_successfully' => 'DummyClassUpper ανακτήθηκε με επιτυχία|DummyClassUpper ανακτήθηκαν με επιτυχία',
+    'not_found'              => 'DummyClassUpper δεν βρέθηκε',
+    'saved_successfully'     => 'DummyClassUpper αποθηκεύτηκε με επιτυχία',
+    'updated_successfully'   => 'DummyClassUpper ενημερώθηκε με επιτυχία',
+    'deleted_successfully'   => 'DummyClassUpper διαγράφηκε με επιτυχία',
+];
