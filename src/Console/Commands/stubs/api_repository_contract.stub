@@ -1,0 +1,10 @@
+<?php
+
+namespace DummyNamespace;
+
+use Otodev\Contracts\RepositoryContract;
+
+interface DummyClassRepositoryContract extends RepositoryContract
+{
+    //
+}
