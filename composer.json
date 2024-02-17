@@ -1,0 +1,63 @@
+{
+  "name": "otodev/laravel-repo-generator",
+  "description": "Repository Generator for Laravel Framework.",
+  "keywords": [
+    "repository",
+    "generator",
+    "framework",
+    "laravel"
+  ],
+  "type": "project",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Dimitris Ntais",
+      "email": "d.dais@otodev.gr"
+    }
+  ],
+  "require": {
+    "php": "^7.3|^8.0|^8.1|^8.2|^8.3",
+    "ext-json": "*",
+    "illuminate/contracts": "^7.0|^8.0|^9.0|^10.0|^11.0",
+    "illuminate/support": "^7.0|^8.0|^9.0|^10.0|^11.0"
+  },
+  "require-dev": {
+    "laravel/framework": "^7.0|^8.0|^9.0|^10.0|^11.0",
+    "phpunit/phpunit": "^8.5|^9.3|^10.1"
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Otodev\\Providers\\CoreServiceProvider",
+        "Otodev\\Providers\\GreeklishServiceProvider",
+        "Otodev\\Providers\\CryptoJsAesServiceProvider",
+        "Otodev\\Providers\\RepositoryServiceProvider",
+        "Otodev\\Providers\\ValidationServiceProvider"
+      ],
+      "aliases": {
+        "Core": "Otodev\\Facades\\Core"
+      }
+    },
+    "branch-alias": {
+      "dev-master": "3.x-dev"
+    }
+  },
+  "autoload": {
+    "files": [
+      "src/Core/Helpers/helpers.php"
+    ],
+    "psr-4": {
+      "Otodev\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Otodev\\Tests\\": "tests/"
+    }
+  },
+  "config": {
+    "sort-packages": true
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true
+}
