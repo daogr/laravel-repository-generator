@@ -1,0 +1,9 @@
+<?php
+
+return [
+    'retrieved_successfully' => 'DummyClassUpper retrieved successfully|DummyClassUpper retrieved successfully',
+    'not_found'              => 'DummyClassUpper not found',
+    'saved_successfully'     => 'DummyClassUpper saved successfully',
+    'updated_successfully'   => 'DummyClassUpper updated successfully',
+    'deleted_successfully'   => 'DummyClassUpper deleted successfully',
+];

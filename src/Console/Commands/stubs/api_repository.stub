@@ -1,0 +1,177 @@
+<?php
+
+namespace DummyNamespace;
+
+use App\Contracts\Repositories\UseDummyClassRepositoryContract;
+use App\Http\Resources\UseDummyClassListResource;
+use App\Http\Resources\UseDummyClassShowResource;
+use App\Http\Resources\UseDummyClassStoreResource;
+use App\Http\Resources\UseDummyClassUpdateResource;
+use App\Models\UseDummyClass;
+use Eloquent;
+use Illuminate\Contracts\Container\BindingResolutionException;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
+use Otodev\Contracts\ValidatorContract;
+use Otodev\Criteria\BaseRequestCriteria;
+use Otodev\Eloquent\BaseRepository;
+use Otodev\Exceptions\RepositoryException;
+use Otodev\Exceptions\ValidatorException;
+use Otodev\Utils\RepositoryUtil;
+
+class DummyClassRepository extends BaseRepository implements DummyClassRepositoryContract
+{
+    /**
+     * @var array
+     */
+    protected $fieldSearchable = [];
+
+    /**
+     * Specify Validator Rules.
+     *
+     * @var array
+     */
+    protected $rules = DummyClass::RULES;
+
+    /**
+     * RolesRepository constructor.
+     *
+     * @throws BindingResolutionException
+     * @throws RepositoryException
+     */
+    public function __construct(Application $app)
+    {
+        parent::__construct($app);
+    }
+
+    /**
+     * Specify Model class name.
+     */
+    public function model(): string
+    {
+        return DummyClass::class;
+    }
+
+    /**
+     * Boot up the repository, pushing criteria.
+     */
+    public function boot()
+    {
+        //$this->pushCriteria(app(UseDummyClassCriteria::class));
+    }
+
+    /**
+     * Find data by id.
+     *
+     * @throws BindingResolutionException
+     * @throws RepositoryException
+     */
+    public function show(int $id): mixed
+    {
+        $result = parent::find($id);
+
+        if (! $this->isSkippedResource()) {
+            return (new DummyClassShowResource($result))->toArray(request());
+        }
+
+        return $result;
+    }
+
+    /**
+     * Save a new entity in repository.
+     *
+     * @throws BindingResolutionException
+     * @throws RepositoryException
+     * @throws ValidatorException
+     */
+    public function create(array $attributes): mixed
+    {
+        $attributes = (new DummyClassStoreResource($attributes))->additional(['fillable' => $this->model->getFillable()])->toArray(request());
+
+        $result = parent::create($attributes);
+
+        if (! $this->isSkippedResource()) {
+            return (new DummyClassShowResource($result))->toArray(request());
+        }
+
+        return $result;
+    }
+
+    /**
+     * Update an entity in repository by id.
+     *
+     * @throws BindingResolutionException
+     * @throws RepositoryException
+     * @throws ValidatorException
+     */
+    public function update(array $attributes, $id): mixed
+    {
+        $exists = $this->exists($id);
+        if (! $exists) {
+            return $exists;
+        }
+
+        $attributes = (new DummyClassUpdateResource($attributes))->additional(['fillable' => $this->model->getFillable()])->toArray(request());
+
+        $result = parent::update($attributes, $id);
+
+        if (! $this->isSkippedResource()) {
+            return (new DummyClassShowResource($result))->toArray(request());
+        }
+
+        return $result;
+    }
+
+    /**
+     * Update or Create an entity in repository.
+     *
+     * @throws BindingResolutionException
+     * @throws RepositoryException
+     * @throws ValidatorException
+     */
+    public function updateOrCreate(array $attributes, array $values = [], $action = null): mixed
+    {
+        $id = $attributes['Id'] ?? $attributes['id'] ?? null;
+
+        if (! empty($id) && is_numeric($id)) {
+            $action = ValidatorContract::RULE_UPDATE;
+        }
+
+        if ($action == ValidatorContract::RULE_UPDATE) {
+            $values = (new DummyClassUpdateResource($values))->additional(['fillable' => $this->model->getFillable()])->toArray(request());
+
+        } else {
+            $values = (new DummyClassStoreResource($values))->additional(['fillable' => $this->model->getFillable()])->toArray(request());
+        }
+
+        $result = parent::updateOrCreate(['id' => $id], $values, $action);
+
+        if (! $this->isSkippedResource()) {
+            return (new DummyClassShowResource($result))->toArray(request());
+        }
+
+        return $result;
+    }
+
+    /**
+     * Retrieve all data of repository, paginated.
+     *
+     * @throws BindingResolutionException
+     * @throws RepositoryException
+     */
+    public function paginate($limit = null, $columns = ['*'], string $method = 'paginate'): array
+    {
+        $this->pushCriteria(app(BaseRequestCriteria::class));
+
+        $result = parent::paginate($limit, $columns, $method);
+
+        if (! $this->isSkippedResource()) {
+            $resource = DummyClassListResource::collection($result)->toArray(request());
+
+            return RepositoryUtil::paginate($resource, $result->count(), $result->total());
+        }
+
+        return RepositoryUtil::paginate($result, $result->count(), $result->total());
+    }
+}
